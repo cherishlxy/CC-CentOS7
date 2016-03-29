@@ -25,10 +25,9 @@ glance image-create --name "CENTOS-7" --disk-format qcow2 --container-format bar
 At the end of its execution, the script provides the Glance command that can be
 used to upload the image to an existing OpenStack infrastructure.
 
-The scripts in the `elements` directory describe how the image is customized.
+The other scripts in the `elements` directory are invoked by create-image.sh.
 This script does the following:
 
-* Install dependencies (diskimage-builder, git, xfsprogs, xz)
 * Download a CentOS 7 cloud image from upstream
 * Customize it for Chameleon (see `elements` directory for details)
 * Generate an image compatible with OpenStack KVM and bare-metal
