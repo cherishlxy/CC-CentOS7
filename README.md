@@ -1,4 +1,4 @@
-# CC-CentOS7
+# CC-CentOS7-GPU
 
 This directory contains the scripts used to generate the Chameleon KVM and
 bare-metal CentOS 7 images. It relies on diskimage-builder.
