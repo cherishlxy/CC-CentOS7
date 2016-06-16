@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+# Cloning ChameleonSnapshotting script
+git clone https://github.com/badock/ChameleonSnapshotting.git
+
+# Ensure that "cc-snapshot" is executable
+chmod +x ChameleonSnapshotting/cc-snapshot
+
+# Moving the "cc-snapshot" executable to /usr/bin
+mv ChameleonSnapshotting/cc-snapshot /usr/bin
+
+# Cleaning
+rm -rf ChameleonSnapshotting
+
+exit 0
