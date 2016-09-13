@@ -6,4 +6,4 @@ fi
 set -eu
 set -o pipefail
 
-yum install -y https://repos.fedorapeople.org/repos/openstack/openstack-liberty/rdo-release-liberty-5.noarch.rpm
+yum install -y centos-release-openstack-mitaka
