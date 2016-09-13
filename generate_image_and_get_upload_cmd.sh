@@ -11,16 +11,16 @@ fi
 export DIB_PASSWORD="root"
 
 if [ "$USE_PARTITION_IMAGE" = true ]; then
-  # Preparing a temporary folder that will store the CENTOS-7 image.
+  # Preparing a temporary folder that will store the CentOS 7 image.
   rm -rf tmp
   mkdir tmp
-  # Download a CENTOS-7 image designed for partition images.
+  # Download a CentOS 7 image designed for partition images.
   export LIBGUESTFS_BACKEND=direct
   yum install -y libguestfs-tools-c
   # Getting the last CentOS image
-  wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1602.qcow2c
-  mv CentOS-7-x86_64-GenericCloud-20141129_01.qcow2c tmp/CentOS-7-x86_64-GenericCloud-1602.qcow2c
-  export DIB_LOCAL_IMAGE="$PWD/tmp/CentOS-7-x86_64-GenericCloud-1602.qcow2c"
+  wget http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1608.qcow2c
+  mv CentOS-7-x86_64-GenericCloud-1608.qcow2c tmp/CentOS-7-x86_64-GenericCloud-1608.qcow2c
+  export DIB_LOCAL_IMAGE="$PWD/tmp/CentOS-7-x86_64-GenericCloud-1608.qcow2c"
 fi
 
 OUTPUT_FOLDER="$1"
@@ -36,7 +36,7 @@ IMAGE_QCOW_PATH="$IMAGE_PATH"
 IMAGE_VMLINUZ_PATH="$IMAGE_PATH.vmlinuz"
 IMAGE_INITRD_PATH="$IMAGE_PATH.initrd"
 
-IMAGE_NAME="CC-CENTOS-7"
+IMAGE_NAME="CC-CentOS7"
 IMAGE_VMLINUZ_NAME="$IMAGE_NAME-kernel"
 IMAGE_INITRD_NAME="$IMAGE_NAME-initrd"
 

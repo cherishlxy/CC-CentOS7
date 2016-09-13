@@ -18,6 +18,7 @@ sudo yum install epel-release
 yum install qemu-img # or apt-get install qemu-disk
 pip install diskimage-builder
 ```
+
 ## Usage
 
 The main script takes an output path as a unique (optional) input parameter:
@@ -28,8 +29,8 @@ The main script takes an output path as a unique (optional) input parameter:
 and can be used as in the following example:
 ```
 [cc@image-builder-jpastor CC-CentOS7]$ ./create-image.sh image.qcow2
-CentOS-7-x86_64-GenericCloud-1602.qcow2.xz: OK
-xz: CentOS-7-x86_64-GenericCloud-1602.qcow2: File exists
+CentOS-7-x86_64-GenericCloud-1608.qcow2.xz: OK
+xz: CentOS-7-x86_64-GenericCloud-1608.qcow2: File exists
 
 [...]
 
@@ -38,7 +39,7 @@ Image file image.qcow2 created...
 mv image.qcow2-compressed image.qcow2
 Image built in image.qcow2
 to add the image in glance run the following command:
-glance image-create --name "CENTOS-7" --disk-format qcow2 --container-format bare --file image.qcow2
+glance image-create --name "CC-CentOS7" --disk-format qcow2 --container-format bare --file image.qcow2
 ```
 
 At the end of its execution, the script provides the Glance command that can be

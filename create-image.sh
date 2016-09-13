@@ -5,8 +5,8 @@
 # * via Pip: diskimage-builder
 
 
-IMAGE_NAME="CENTOS-7"
-BASE_IMAGE="CentOS-7-x86_64-GenericCloud-1602.qcow2"
+IMAGE_NAME="CC-CentOS7"
+BASE_IMAGE="CentOS-7-x86_64-GenericCloud-1608.qcow2"
 
 if [ "$BASE_IMAGE" == "" ]; then
   echo "could not identify the last centos qcow2 image from http://cloud.centos.org/centos/7/images/sha256sum.txt"
