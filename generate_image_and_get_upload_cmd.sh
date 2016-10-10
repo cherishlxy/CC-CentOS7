@@ -8,7 +8,8 @@ if [ "$1" == "partition" ]; then
   USE_PARTITION_IMAGE=true
 fi
 
-export DIB_PASSWORD="root"
+# For debugging; can be used by the root-passwd element, if imported
+# export DIB_PASSWORD="root"
 
 if [ "$USE_PARTITION_IMAGE" = true ]; then
   # Preparing a temporary folder that will store the CentOS 7 image.
