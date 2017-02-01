@@ -1,0 +1,68 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+# Install kernel
+cd ~/rpmbuild/BUILD/kernel*/linux*/
+sudo mv /boot/grub/grub.conf /boot/grub/grub.conf.old
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+sudo make install
+sudo mv /boot/grub/grub.conf.old /boot/grub/grub.conf
+cd ~
+
+# Install OFED with SR-IOV support
+TEMP_OFED_TAR_NAME=`ls /tmp | grep MLNX`
+tar zxf /tmp/$TEMP_OFED_TAR_NAME -C `pwd`
+TEMP_OFED_NAME=`ls -t | grep MLNX | head -1`
+sudo $TEMP_OFED_NAME/mlnxofedinstall --enable-sriov --force
+
+# Setup IB interface
+sudo cat << EOF > /etc/sysconfig/network-scripts/ifcfg-ib0 
+DEVICE=ib0
+ONBOOT=yes
+TYPE=Ethernet
+BOOTPROTO=none
+IPADDR=172.16.108.49
+NETMASK=255.255.254.0
+NM_CONTROLLED=no
+EOF
+
+ipaddress=$(ifconfig eno1 | grep -E "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" | awk '{ print $2 }' | sed -e 's/10.40/172.16/g')
+sudo sed -i -- "s/172.16.108.49/$ipaddress/g" /etc/sysconfig/network-scripts/ifcfg-ib0
+
+# Configure SR-IOV
+sed -i -- 's/vga=normal/vga=normal\ intel iommu=on/g' /etc/default/grub 
+echo "options mlx4_core num_vfs=16" > /etc/modprobe.d/mlx4_core.conf
+
+# Setup OFED install script 
+sudo cat << EOF >> /etc/rc.local
+
+# Check if OFED is installed and working
+ibhosts
+if [ "\$?" == "0" ]
+then
+	exit 0
+fi
+
+# Install OFED with SR-IOV support
+cd /
+tar xzf MLNX*.tgz
+cd MLNX*
+./mlnxofedinstall --force --enable-sriov | tee -a /home/cc/ofed-install.log
+/etc/init.d/openibd restart
+mst start
+mlxconfig -d /dev/mst/mt4099_pciconf0 s SRIOV_EN=1
+mstflint -dev 03:00.0 dc
+rm -rf /MLNX*
+reboot
+EOF
+chmod +x /etc/rc.local
+
+# Cleanup
+sudo rm -rf rpmbuild
+mv /tmp/$TEMP_OFED_TAR_NAME /
+sudo ls | grep MLNX | xargs rm -rf

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+# Configuration Parameters
+OFED_NAME=MLNX_OFED_LINUX-3.4-2.0.0.0-rhel7.3-x86_64
+OFED_TAR_NAME=$OFED_NAME.tgz
+OFED_URL=http://www.mellanox.com/downloads/ofed/MLNX_OFED-3.4-2.0.0.0/$OFED_TAR_NAME
+
+# Create Custom OFED 
+curl -O $OFED_URL
+tar zxf $OFED_TAR_NAME
+sudo $OFED_NAME/mlnx_add_kernel_support.sh -m $OFED_NAME/ -s $TMP_BUILD_DIR/built/root/rpmbuild/BUILD/kernel*/linux* -y
+sudo cp /tmp/MLN*.tgz $TMP_BUILD_DIR/built/tmp/

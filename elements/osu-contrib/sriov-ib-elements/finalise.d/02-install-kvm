@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+# Install necessary packages
+sudo yum install -y qemu-system-x86 qemu-kvm qemu-img libvirt libvirt-python libvirt-client virt-install
+curl -O ftp://ftp.pbone.net/mirror/li.nux.ro/download/nux/misc/el7/x86_64/tunctl-1.5-12.el7.nux.x86_64.rpm
+sudo rpm -Uvh tunctl-1.5-12.el7.nux.x86_64.rpm
+rm tunctl-1.5-12.el7.nux.x86_64.rpm
+
+# Setup network bridge
+ls /etc/sysconfig/network-scripts/
+sudo cat << EOF > /etc/sysconfig/network-scripts/ifcfg-eno1
+DEVICE="eno1"
+BOOTPROTO="dhcp"
+ONBOOT="yes"
+TYPE="Ethernet"
+EOF
+sudo sed -i -- 's/dhcp/none/g' /etc/sysconfig/network-scripts/ifcfg-eno1
+sudo sh -c 'echo "BRIDGE=\"br0\"" >> /etc/sysconfig/network-scripts/ifcfg-eno1'
+sudo sh -c 'printf "DEVICE=br0\nONBOOT=yes\nTYPE=Bridge\nBOOTPROTO=dhcp\nDELAY=0\nNM_CONTROLLED=no" > /etc/sysconfig/network-scripts/ifcfg-br0'
+
+# Setup ssh
+ssh-keygen -t rsa -f ~/.ssh/id_rsa -P ""
