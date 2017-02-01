@@ -31,5 +31,5 @@ rm -rf chameleon
 # Compile the kernel
 cd ~/rpmbuild/BUILD/kernel-"$KERNEL_VERSION"/linux-"$KERNEL_VERSION".x86_64/
 sudo make olddefconfig
-sudo make && sudo make modules && sudo make modules_install
+sudo make -j 24 && sudo make modules && sudo make modules_install
 cd ~
